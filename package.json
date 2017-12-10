@@ -1,0 +1,17 @@
+{
+  "name": "klari0m2",
+  "version": "0.0.2",
+  "description": "Klari Zero: Model 2, A Klari4Discord Overhaul",
+  "main": "klari0m2.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Quberation Industries",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^11.1.0",
+    "fs-extra": "^4.0.1",
+    "node-opus": "^0.2.6",
+    "uws": "^8.14.1"
+  }
+}
