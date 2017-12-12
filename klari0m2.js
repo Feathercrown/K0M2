@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 var ready = false;
 const shell = require('./klari0m2.js');
@@ -9,7 +9,8 @@ const fs = require('fs');
 /**
  * Easy Logging
  * 
- * Internal Utility Function for Klari Gen.0_M.2. Records logs only visible to the terminal.
+ * Internal Utility Function for Klari Gen.0_M.2.
+ * Records logs only visible to the terminal.
  * @param {*} str Anything that you want to log. 
  * @param {number} err Log's error value.
  * 
@@ -45,8 +46,8 @@ exports.log = function(str, err){
         case 1:
             color = '\x1b[35m';
             err = 'KLARI>';
-            if(!config.terminal.discordLogEnabled){
-                client.channels.get(config.terminal.channel).send(`\`${'['+terminalDate+' '+err+' '+str}\``);
+            if(config.terminal.quietMode){
+                client.channels.get(config.terminal.channel).send(str);
             }
             break;
         case 0:
@@ -60,21 +61,27 @@ exports.log = function(str, err){
             return console.log(err);
         }
     });
-    if(ready && config.terminal.discordLogEnabled){
+    if(ready && !config.terminal.quietMode){
         client.channels.get(config.terminal.channel).send(`\`${'['+terminalDate+' '+err+' '+str}\``);
     }
     return console.log(color+'['+terminalDate+' '+err+' '+str);
 };
 
-//File requirements and what not
-shell.log('Starting boot timer');
-const bootStart = Date.now();
-
+/**
+ * Require with Sprinkles
+ * 
+ * Internal Utility Function for Klari Gen.0_M.2.
+ * Invokes `require()` on input parameter, and logs input to the terminal.
+ * @param {string} str Anything that you want to `require()`. 
+ */
 function mount(str){
     shell.log('Mounting ' + str);
     return require(str);
 }
 
+//File requirements and what not
+shell.log('Starting boot timer');
+const bootStart = Date.now();
 var config = mount('./config.json');
 const Discord = mount('discord.js');
 const Fse = mount('fs-extra');
@@ -94,7 +101,7 @@ shell.log('Readying Discord module');
 client.on('ready', ()=>{
     //Wrap listeners and handlers in this 'ready' method
     ready = true;
-    shell.log('Preparing listeners between Node and Discord',1);
+    shell.log('Preparing listeners between Node and Discord...',1);
 
     //Global message listener (listening to all servers in Discord)
     client.on('message', message =>{
@@ -120,7 +127,10 @@ client.on('ready', ()=>{
     });
 
     const bootEnd = Date.now();
-    shell.log(`Done! Finished boot process in ${(bootEnd-bootStart)/1000} seconds.`,1);
+    shell.log(`Done! Finished boot process in ${(bootEnd-bootStart)/1000} seconds. Hello, world!`,1);
+    if(!config.terminal.quietMode){
+        shell.log('Quiet Mode has been Disabled.',1);
+    }
     shell.log('Boot process complete. Ctrl-C to terminate Node environment.',5);
     // End of Boot Sequence.
 });
