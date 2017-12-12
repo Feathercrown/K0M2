@@ -1,14 +1,11 @@
 'use strict';
 
-const shell = require('./klari0m2.js');
 var ready = false;
+const shell = require('./klari0m2.js');
 const date = new Date();
+const latestLog =`./logs/${date.toDateString().replace(/[\s:]/g,'-')+'-'+date.toLocaleTimeString().replace(/[\s:]/g,'-')}.txt`;
 const fs = require('fs');
-var logToFile = fs.createWriteStream(`./logs/${date.toDateString().replace(/[\s:]/g,'-')+'-'+date.toLocaleTimeString().replace(/[\s:]/g,'-')}.txt`,'',(err)=>{
-    if(err) {
-        return console.log(err);
-    }
-});
+
 /**
  * Easy Logging
  * 
@@ -27,6 +24,7 @@ var logToFile = fs.createWriteStream(`./logs/${date.toDateString().replace(/[\s:
  */
 exports.log = function(str, err){
     let color;
+    let terminalDate = new Date().toTimeString().substr(0,8);
     switch (err){
         case 5:
             color = '\x1b[32m';
@@ -48,7 +46,7 @@ exports.log = function(str, err){
             color = '\x1b[35m';
             err = 'KLARI>';
             if(!config.terminal.discordLogEnabled){
-                client.channels.get(config.terminal.channel).send(`\`${'['+new Date().toTimeString().substr(0,8)+' '+err+' '+str}\``);
+                client.channels.get(config.terminal.channel).send(`\`${'['+terminalDate+' '+err+' '+str}\``);
             }
             break;
         case 0:
@@ -57,14 +55,19 @@ exports.log = function(str, err){
             err = 'INFO]';
             break;
     }
+    let logFile = fs.createWriteStream(latestLog,'',(err)=>{
+        if(err) {
+            return console.log(err);
+        }
+    });
     if(ready && config.terminal.discordLogEnabled){
-        client.channels.get(config.terminal.channel).send(`\`${'['+new Date().toTimeString().substr(0,8)+' '+err+' '+str}\``);
+        client.channels.get(config.terminal.channel).send(`\`${'['+terminalDate+' '+err+' '+str}\``);
     }
-    return console.log(color+'['+new Date().toTimeString().substr(0,8)+' '+err+' '+str);
+    return console.log(color+'['+terminalDate+' '+err+' '+str);
 };
 
 //File requirements and what not
-shell.log('Starting boot timer...');
+shell.log('Starting boot timer');
 const bootStart = Date.now();
 
 function mount(str){
@@ -75,24 +78,28 @@ function mount(str){
 var config = mount('./config.json');
 const Discord = mount('discord.js');
 const Fse = mount('fs-extra');
+const Ffmpeg = mount('ffmpeg');
+shell.log('Done!',5);
 
 // Boot Sequence
-shell.log('Creating new Discord client and exporting as a global...')
+shell.log('Creating new Discord client');
 const client = new Discord.Client();
+shell.log('Done!',5);
 
-shell.log('Logging into Discord server...');
+shell.log('Logging into Discord server');
 client.login(config.token);
+shell.log('Done!',5);
 
-shell.log('Readying Discord module...')
+shell.log('Readying Discord module');
 client.on('ready', ()=>{
     //Wrap listeners and handlers in this 'ready' method
     ready = true;
-    shell.log('Preparing listeners between Node and Discord...',1);
+    shell.log('Preparing listeners between Node and Discord',1);
 
     //Global message listener (listening to all servers in Discord)
     client.on('message', message =>{
         // Remote terminal
-        if(message.author.id == config.id) return;
+        if(message.author.id == config.selfId) return;
         shell.log(`DISCORD MESSAGE>
     [   GUILD: ${message.guild.name}
     [ CHANNEL: #${message.channel.name}
@@ -105,8 +112,8 @@ client.on('ready', ()=>{
         const command = args.shift().toLowerCase();
 
         try {
-            let extCommand = require(`./shell/commands/${command}.js`);
-            extCommand.run(client, message, args);
+            require(`./shell/commands/${command}.js`)
+                .run(client, message, args);
         } catch (err) {
             shell.log(err, 3);
         }
