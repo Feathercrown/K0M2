@@ -1,4 +1,5 @@
 const Shell = require('../../klari0m2.js');
+const Discord = require('Discord.js');
 exports.run = (client, message, args, sudo) => {
     var output = "";
     var channels = Array.from(Array.from(client.guilds)[0][1].channels);
