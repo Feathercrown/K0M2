@@ -5,4 +5,4 @@ exports.run = (client, message, args, sudo) => {
         var curchan = channels[i][1];
         Shell.log("Name: ${curchan.name}\nType: ${curchan.type}"+curchan.topic==""?"":curchan.topic,1);
     }
-});
+};
