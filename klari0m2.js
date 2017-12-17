@@ -1,11 +1,10 @@
 "use strict";
-
-var ready = false;
-const shell = require('./klari0m2.js');
-const date = new Date();
-const latestLog =`./logs/${date.toDateString().replace(/[\s:]/g,'-')+'-'+date.toLocaleTimeString().replace(/[\s:]/g,'-')}.txt`;
-const fs = require('fs');
-
+var messageGlobal = undefined,
+    ready = false;
+const shell = require('./klari0m2.js'),
+    date = new Date(),
+    latestLog =`./logs/${date.toDateString().replace(/[\s:]/g,'-')+'-'+date.toLocaleTimeString().replace(/[\s:]/g,'-')}.txt`,
+    fs = require('fs');
 /**
  * Easy Logging
  * 
@@ -23,7 +22,7 @@ const fs = require('fs');
  * 
  * Defaults to INFO if no error code is given.
  */
-exports.log = function(str, err){
+exports.log = (str, err) => {
     let color;
     let terminalDate = new Date().toTimeString().substr(0,8);
     switch (err){
@@ -48,6 +47,9 @@ exports.log = function(str, err){
             err = 'KLARI>';
             if(config.terminal.quietMode){
                 client.channels.get(config.terminal.channel).send(str);
+                if(messageGlobal!==undefined){
+                    messageGlobal.channel.send(str);
+                }
             }
             break;
         case 0:
@@ -55,7 +57,7 @@ exports.log = function(str, err){
             color = '\x1b[37m';
             err = 'INFO]';
             break;
-    }
+    }   
     let logFile = fs.createWriteStream(latestLog,'',(err)=>{
         if(err) {
             return console.log(err);
@@ -74,11 +76,14 @@ exports.log = function(str, err){
  * Invokes `require()` on input parameter, and logs input to the terminal.
  * @param {string} str Anything that you want to `require()`. 
  */
-function mount(str){
-    shell.log('Mounting ' + str);
-    return require(str);
+function mount(str) {
+    try {
+        shell.log('Mounting '+str);
+        return require(str);
+    } catch (err) {
+        shell.log(err, 3);
+    }
 }
-
 //File requirements and what not
 shell.log('Starting boot timer');
 const bootStart = Date.now();
@@ -87,6 +92,7 @@ const Discord = mount('discord.js');
 const Fse = mount('fs-extra');
 const Ffmpeg = mount('ffmpeg');
 shell.log('Done!',5);
+
 
 // Boot Sequence
 shell.log('Creating new Discord client');
@@ -106,6 +112,7 @@ client.on('ready', ()=>{
     //Global message listener (listening to all servers in Discord)
     client.on('message', message =>{
         // Remote terminal
+        messageGlobal = message;
         if(message.author.id == config.selfId) return;
         shell.log(`DISCORD MESSAGE>
     [   GUILD: ${message.guild.name}
@@ -115,14 +122,29 @@ client.on('ready', ()=>{
     `);
         if(!message.content.startsWith(config.terminal.prefix) || !config.terminal.remoteEnabled) return;
 
-        const args = message.content.slice(config.terminal.prefix.length).trim().split(/ +/g);
-        const command = args.shift().toLowerCase();
+        var args = message.content.slice(config.terminal.prefix.length).trim().split(/ +/g);
+        var command = args.shift().toLowerCase();
 
+        //Superuser permissions check
+        var sudo = false;
+        if(command==="sudo"){
+            shell.log('SUPERUSER INVOKED', 2);
+            if(config.permissions.whitelist.includes(message.author.id)){
+                sudo = true;
+                shell.log(`Match found in whitelist for user "${message.author.username}". Attached command running at elevated permission.`, 5);
+                command = args.shift();
+            } else {
+                shell.log(`No match found in whitelist for user "${message.author.username}". Permission denied; parsing terminated.`, 3);
+                return message.reply('You lack the permissions required to use Superuser mode. Access denied and command parsing terminated.');
+            }
+        }
+        
         try {
             require(`./shell/commands/${command}.js`)
-                .run(client, message, args);
+                .run(client, message, args, sudo);
         } catch (err) {
             shell.log(err, 3);
+            shell.log(`Hmm. This '${command}' module you speak of doesn't seem to exist. Have you, by any chance, mistyped?`, 1);
         }
     });
 
@@ -133,4 +155,5 @@ client.on('ready', ()=>{
     }
     shell.log('Boot process complete. Ctrl-C to terminate Node environment.',5);
     // End of Boot Sequence.
+    
 });
