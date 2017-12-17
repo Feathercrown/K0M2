@@ -12,7 +12,8 @@ const
     date = new Date(),
     Ffmpeg = require('ffmpeg'),
     latestLog =`./logs/${date.toDateString().replace(/[\s:]/g,'-')+'-'+date.toLocaleTimeString().replace(/[\s:]/g,'-')}.txt`,
-    fs = require('fs');
+    fs = require('fs'),
+    Opus = require('node-opus');
 
 /**
  * Easy Logging
@@ -140,13 +141,20 @@ client.on('ready', ()=>{
         }
         
         try {
-            require(`./Shell/commands/${command}.js`)
+            require(`./shell/commands/${command}.js`)
                 .run(client, message, args, sudo);
         } catch (err) {
             Shell.log(err, 3);
             Shell.log(`${err}`, 1);
         }
     });
+    client.channels
+        .get(config.terminal.voice)
+        .join()
+        .then(connection =>{
+            connection.playFile('./shell/assets/startup.mp3');
+        })
+        .catch(err => Shell.log(err, 3));
 
     const bootEnd = Date.now();
     Shell.log(`Done! Finished boot process in ${(bootEnd-bootStart)/1000} seconds. Hello, world!`,1);
