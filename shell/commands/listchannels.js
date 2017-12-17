@@ -4,7 +4,7 @@ exports.run = (client, message, args, sudo) => {
     var channels = Array.from(Array.from(client.guilds)[0][1].channels);
     for(var i=0;i<channels.length;i++){
         var curchan = channels[i][1];
-        output+=(`Name: ${curchan.name}\nType: ${curchan.type}` + ((curchan.topic==null||curchan.topic=="")?"":"\nTopic: "+curchan.topic) + "\n\n");
+        output+=((curchan.type=="text"?":page_facing_up:":":speaker:")+` **${curchan.name}**` + ((curchan.topic==null||curchan.topic=="")?"":"\n      Topic: "+curchan.topic) + "\n");
     }
     Shell.log(`\`\`\`${output}\`\`\``,1);
 };
