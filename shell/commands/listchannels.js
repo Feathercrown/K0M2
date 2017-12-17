@@ -17,5 +17,5 @@ exports.run = (client, message, args, sudo) => {
             }
         }
     }
-    Shell.log(embed,1);
+    Shell.log({embed},1);
 };
