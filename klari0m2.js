@@ -137,17 +137,18 @@ client.on('ready', ()=>{
                 `Anything I can help you with, ${message.author.username}?`,
                 `Aww... Lonely, ${message.author.username}?`
             ];
-            return Shell.log(responses[Math.floor(Math.random() * responses.length)],1);
+            return Shell.log(responses[Math.round(Math.random() * responses.length)],1);
         }
         
         try {
             require(`./shell/commands/${command}.js`)
                 .run(client, message, args, sudo);
         } catch (err) {
-            Shell.log(err, 3);
             Shell.log(`${err}`, 1);
         }
     });
+
+    //Play startup message
     client.channels
         .get(config.terminal.voice)
         .join()
