@@ -6,6 +6,6 @@
 - Add a "power" object to config for scheduling wake times and what not
 - Add power control commands like shutdown, reboot, sleep
 
-- Add the startup sound with ffmpeg (and for making more klari sounds, go to IBM's tts machine and remember that pitch="150Hz")
-
 - PLEASE ADD A BASIC ROLEPLAY MANAGER SOON (Turn scheduling, initiative, actions, environment)
+
+- Add the startup sound with ffmpeg (and for making more klari sounds, go to IBM's tts machine and remember that pitch="150Hz")
