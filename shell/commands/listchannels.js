@@ -6,5 +6,5 @@ exports.run = (client, message, args, sudo) => {
         var curchan = channels[i][1];
         output+=(`Name: ${curchan.name}\nType: ${curchan.type}` + ((curchan.topic==null||curchan.topic=="")?"":"\nTopic: "+curchan.topic) + "\n\n");
     }
-    Shell.log(output,1);
+    Shell.log(`\`\`\`${output}\`\`\``,1);
 };
