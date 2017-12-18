@@ -113,8 +113,12 @@ client.on('ready', ()=>{
         if(!prefix) return;
 
         //Prepare message for evaluation
-        var args = message.content.slice(prefix.length).trim().split(/ +/g),
-            command = args.shift().toLowerCase(),
+        var inArgs = message.content
+            .slice(prefix.length)
+            .trim()
+            .split(/ +/g),
+            command = inArgs.shift().toLowerCase(),
+            args = inArgs.map( v => v.toLowerCase());
             sudo = false;
 
         //Superuser permissions check
