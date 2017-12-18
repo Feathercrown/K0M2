@@ -1,8 +1,11 @@
-const shell = require('../../klari0m2.js');
-exports.run = (client, message, args, sudo) => {
-    if(sudo){
-        shell.log(`Everything's in working order, master ${message.author.username}.`,1);
+const Shell = require('../../klari0m2.js');
+exports.run = (client, message, args, sudo, conn) => {
+    if(args[0]=='voice'){
+        conn.playFile('./shell/assets/test.mp3');
+        Shell.log('Playing audio file. If you don\'t hear this message, something probably isn\'t working.\nBut you\'re hearing it now, so good job.',1);
+    } else if(sudo){
+        Shell.log(`Everything's in working order, master ${message.author.username}.`,1);
     } else {
-        shell.log(`Everything's dandy over here, ${message.author.username}!`,1);
+        Shell.log(`Everything's dandy over here, ${message.author.username}!`,1);
     }
 }
