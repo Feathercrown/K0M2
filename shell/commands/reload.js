@@ -6,7 +6,7 @@ exports.run = (client, message, args, sudo) => {
         return
     } else {
         // the path is relative to the *current folder*, so just ./filename.js
-        delete require.cache[require.resolve(`./${args[0]}.js`)];
-        Shell.log(`The "${args[0]}" module has been reloaded.`,1);
+        delete require.cache[require.resolve(`./${args[0].toLowerCase()}.js`)];
+        Shell.log(`The "${args[0].toLowerCase()}" module has been reloaded.`,1);
     }
 };
