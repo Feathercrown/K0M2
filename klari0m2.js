@@ -1,9 +1,10 @@
 "use strict";
 console.log('\nInitializing...\n')
-var 
+var
+    conn,
     config = require('./config.json'),
     messageGlobal = undefined,
-    ready, 
+    ready = false, 
     bootDone = false;
 const
     bootStart = Date.now(),
@@ -142,20 +143,21 @@ client.on('ready', ()=>{
         
         try {
             require(`./shell/commands/${command}.js`)
-                .run(client, message, args, sudo);
+                .run(client, message, args, sudo, conn);
         } catch (err) {
             Shell.log(`${err}`, 1);
         }
     });
 
     //Play startup message
-    client.channels
-        .get(config.terminal.voice)
-        .join()
-        .then(connection =>{
-            connection.playFile('./shell/assets/startup.mp3');
-        })
-        .catch(err => Shell.log(err, 3));
+        client.channels
+            .get(config.terminal.voice)
+            .join()
+            .then(connection =>{
+                connection.playFile('./shell/assets/startup.mp3');
+                conn=connection;
+            })
+            .catch(err => Shell.log(err, 3));
 
     const bootEnd = Date.now();
     Shell.log(`Done! Finished boot process in ${(bootEnd-bootStart)/1000} seconds. Hello, world!`,1);

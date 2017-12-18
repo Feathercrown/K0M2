@@ -1,12 +1,17 @@
-const shell = require('../../klari0m2.js');
-exports.run = (client, message, args, sudo) => {
+const Shell = require('../../klari0m2.js');
+const config = require('../../config.json');
+const ytdl = require('ytdl-core');
+exports.run = (client, message, args, sudo, conn) => {
+    let url = ytdl(args[1]);
     if(args[0]=='play'){
-        client.channels
-        .get(config.terminal.voice)
-        .join()
-        .then(connection =>{
-            connection.playFile('./shell/assets/startup.mp3');
-        })
-        .catch(err => Shell.log(err, 3));
+        //Play command recieved
+        Shell.log('Playing audio file...',1);
+        conn.playFile('./shell/assets/playing_audio.mp3')
+            .once("end", end => {
+                conn.playStream(url)
+                .once("end", end => {
+                    Shell.log('Audio stream over.',1);
+                });
+            });   
     }
 }
