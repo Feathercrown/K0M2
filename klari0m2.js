@@ -96,7 +96,7 @@ client.on('ready', ()=>{
         messageGlobal = message;
 
         //If message was sent by bot itself, return
-        if(message.author.id == config.selfId) return;
+        if(message.author.id == config.selfID) return;
         Shell.log(`DISCORD MESSAGE>
     [   GUILD: ${message.guild.name}
     [ CHANNEL: #${message.channel.name}

@@ -1,6 +1,5 @@
 const 
     Shell = require('../../klari0m2.js'),
-    config = require('../../config.json'),
     ytdl = require('ytdl-core');
 var idle = false;
 exports.run = (client, message, args, sudo, conn) => {
