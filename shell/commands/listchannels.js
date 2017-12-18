@@ -4,7 +4,9 @@ const Discord = require('Discord.js');
 exports.run = (client, message, args, sudo) => {
     var output = "";
     var embed = new Discord.RichEmbed();
-    var channels = Array.from(Array.from(client.guilds)[0][1].channels);
+    var servers = Array.from(client.guilds);
+    var server = servers.get(message.guild.id);
+    var channels = Array.from(server.channels);
     if(channels.length>25){
         Shell.log("Error: More than 25 channels!",1);
     } else {
