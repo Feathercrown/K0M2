@@ -107,11 +107,13 @@ client.on('ready', ()=>{
 
         //If message was sent by bot itself, return
         if((message.author.id == config.selfID) || message.author.bot) return;
+
+        //Log the message
         Shell.log(`DISCORD MESSAGE>
-    [   GUILD: ${message.guild.name}
-    [ CHANNEL: #${message.channel.name}
+    [   GUILD: ${message.guild===null?'N/A':message.guild.name}
+    [ CHANNEL: ${message.guild===null?'Direct Message':'#'+message.channel.name}
     [    USER: ${message.author.username} #${message.author.discriminator}
-    [ CONTENT: "${message.content}"`);
+    [ CONTENT: "${message.content}"\n`);
 
         //If remote terminal isn't enabled, return
         if(!config.terminal.remoteEnabled) return;
@@ -131,17 +133,20 @@ client.on('ready', ()=>{
             sudo = false;
 
         //Superuser permissions check
-        if(command=="sudo"){
+        if((command=="sudo")||(config.permissions.owner===message.author.id)){
             Shell.log('SUPERUSER INVOKED', 2);
             if(config.permissions.whitelist.includes(message.author.id)){
                 sudo = true;
                 Shell.log(`Match found in whitelist for user "${message.author.username}". Attached command running at elevated permission.`, 5);
-                command = args.shift();
+                if(!(config.permissions.owner===message.author.id)){
+                    command = args.shift();
+                }
             } else {
                 Shell.log(`No match found in whitelist for user "${message.author.username}". Permission denied; parsing terminated.`, 3);
                 return message.reply(`You lack the permissions required to use Superuser mode. Access denied and command parsing terminated.`);
             }
         }
+
         //Empty command check
         if(command==''){
             Shell.respond([
