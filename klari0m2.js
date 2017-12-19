@@ -96,7 +96,7 @@ client.on('ready', ()=>{
         messageGlobal = message;
 
         //If message was sent by bot itself, return
-        if(message.author.id == config.selfID) return;
+        if((message.author.id == config.selfID) || message.author.bot) return;
         Shell.log(`DISCORD MESSAGE>
     [   GUILD: ${message.guild.name}
     [ CHANNEL: #${message.channel.name}
@@ -113,12 +113,11 @@ client.on('ready', ()=>{
         if(!prefix) return;
 
         //Prepare message for evaluation
-        var inArgs = message.content
+        var args = message.content
             .slice(prefix.length)
             .trim()
             .split(/ +/g),
-            command = inArgs.shift().toLowerCase(),
-            args = inArgs.map( v => v.toLowerCase());
+            command = args.shift().toLowerCase(),
             sudo = false;
 
         //Superuser permissions check

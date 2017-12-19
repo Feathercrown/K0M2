@@ -1,6 +1,6 @@
 const Shell = require('../../klari0m2.js');
 exports.run = (client, message, args, sudo) => {
-    console.log(args);
+    console.log(args,1);
     if(args===[]){
         Shell.log("Must provide a command name to reload.",1);
         return
