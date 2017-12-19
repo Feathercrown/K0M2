@@ -27,5 +27,6 @@ exports.run = (client, message, args, sudo) => {
     switch(args[0]){
         case 'entries':
             Shell.log(`\`\`\`${Object.entries(config)}\`\`\``,1);
+            //somme comments to do a thing
     }
 }
