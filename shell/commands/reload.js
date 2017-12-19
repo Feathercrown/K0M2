@@ -3,7 +3,7 @@ exports.run = (client, message, args, sudo) => {
     if(!sudo){
         Shell.respond([
             `${message.author.username}, you don't have permission to reload a module!`,
-            `NO, ${message.author.username}! You aren't on the list, so no reloading! >:("`
+            `NO, ${message.author.username}! You aren't on the list, so no reloading! D:<"`
         ]);
         return;
     }

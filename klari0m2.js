@@ -118,6 +118,7 @@ client.on('ready', ()=>{
         //If remote terminal isn't enabled, return
         if(!config.terminal.remoteEnabled) return;
 
+        //Test for a list of prefix aliases
         let prefix = false;
         for(const thisPrefix of config.terminal.prefixes) {
           if(message.content.startsWith(thisPrefix)) prefix = thisPrefix;
@@ -132,15 +133,17 @@ client.on('ready', ()=>{
             command = args.shift().toLowerCase(),
             sudo = false;
 
-        //Superuser permissions check
-        if((command=="sudo")||(config.permissions.owner===message.author.id)){
+        //Owner automatically enters sudo mode
+        if(message.author.id===config.permissions.owner){
+            sudo = true;
+        }
+        //Superuser command check
+        if(command=="sudo"){
             Shell.log('SUPERUSER INVOKED', 2);
             if(config.permissions.whitelist.includes(message.author.id)){
                 sudo = true;
                 Shell.log(`Match found in whitelist for user "${message.author.username}". Attached command running at elevated permission.`, 5);
-                if(!(config.permissions.owner===message.author.id)){
-                    command = args.shift();
-                }
+                command = args.shift();
             } else {
                 Shell.log(`No match found in whitelist for user "${message.author.username}". Permission denied; parsing terminated.`, 3);
                 return message.reply(`You lack the permissions required to use Superuser mode. Access denied and command parsing terminated.`);
@@ -156,6 +159,7 @@ client.on('ready', ()=>{
                 `Anything I can help you with, ${message.author.username}?`,
                 `Aww... Lonely, ${message.author.username}?`
             ]);
+            return;
         }
         
         try {
