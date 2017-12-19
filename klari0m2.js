@@ -76,6 +76,16 @@ exports.log = (str, err) => {
     }
     return console.log(color+'['+terminalDate+' '+err+' '+str);
 };
+/**
+ * Flavorful Responding
+ * 
+ * Internal Utility Function for Klari Gen.0_M.2.
+ * Randomizes an input array of template literals to generate flavor text with `Shell.log(responses,1)`.
+ * @param {array} responses An array of template literals or text you want to send into the Discord.
+ */
+exports.respond = (responses) => {
+    Shell.log(responses[Math.floor(Math.random() * responses.length)],1);
+};
 
 // Boot Sequence
 Shell.log('Creating new Discord client');
@@ -129,26 +139,29 @@ client.on('ready', ()=>{
                 command = args.shift();
             } else {
                 Shell.log(`No match found in whitelist for user "${message.author.username}". Permission denied; parsing terminated.`, 3);
-                return message.reply('You lack the permissions required to use Superuser mode. Access denied and command parsing terminated.');
+                return message.reply(`You lack the permissions required to use Superuser mode. Access denied and command parsing terminated.`);
             }
         }
         //Empty command check
         if(command==''){
-            let responses = [
+            Shell.respond([
                 `Hmm?`,
                 `I've been summoned?`,
                 `Do you require assistance, ${message.author.username}?`,
                 `Anything I can help you with, ${message.author.username}?`,
                 `Aww... Lonely, ${message.author.username}?`
-            ];
-            return Shell.log(responses[Math.round(Math.random() * responses.length)],1);
+            ]);
         }
         
         try {
             require(`./shell/commands/${command}.js`)
                 .run(client, message, args, sudo, conn);
         } catch (err) {
-            Shell.log(`${err}`, 1);
+            Shell.respond([
+                `Hmm... I can't seem to find this "${command}" module you speak of OR I've thrown an error. Have you, by any chance, mistyped?`,
+                `Uhh, ${message.author.username}... This "${command}" module doesn't seem to exist OR I've just thrown an error. Check out the log below.`,
+            ]);
+            Shell.log(`\`\`\`[${err}]\`\`\``, 1);
         }
     });
 
@@ -170,5 +183,4 @@ client.on('ready', ()=>{
     Shell.log('Boot process complete. Ctrl-C to terminate Node environment.',5);
     bootDone = true;
     // End of Boot Sequence.
-    
 });
