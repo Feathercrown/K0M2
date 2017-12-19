@@ -77,6 +77,17 @@ exports.log = (str, err) => {
     return console.log(color+'['+terminalDate+' '+err+' '+str);
 };
 
+/**
+ * Flavor-filled Response.
+ * 
+ * Internal Utility Function for Klari Gen.0_M.2.
+ * Responds to users using an input array of flavor text.
+ * @param {array} responses An array of responses the responder can pick from. 
+ */
+exports.respond = (responses) => {
+    Shell.log(responses[Math.round(Math.random() * responses.length)],1);
+};
+
 // Boot Sequence
 Shell.log('Creating new Discord client');
 const client = new Discord.Client();
