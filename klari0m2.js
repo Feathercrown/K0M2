@@ -95,7 +95,7 @@ exports.respond = (responses) => {
  * @param {array} responses An array of responses the responder can pick from. 
  */
 exports.respond = (responses) => {
-    Shell.log(responses[Math.round(Math.random() * responses.length)],1);
+    Shell.log(responses[Math.floor(Math.random() * responses.length)],1);
 };
 
 // Boot Sequence
@@ -160,15 +160,14 @@ client.on('ready', ()=>{
                 return message.reply(`You lack the permissions required to use Superuser mode. Access denied and command parsing terminated.`);
             }
         }
-
         //Empty command check
         if(command==''){
             Shell.respond([
                 `Hmm?`,
                 `I've been summoned?`,
-                `Do you require assistance, ${message.author.username}?`,
-                `Anything I can help you with, ${message.author.username}?`,
-                `Aww... Lonely, ${message.author.username}?`
+                `Do you require assistance, ${message.author.username}? If so, check out the manual module, \`man\`.`,
+                `Anything I can help you with, ${message.author.username}? If so, check out the manual module, \`man\`.`,
+                `Aww... Lonely, ${message.author.username}? Check out the manual module, \`man\`, for some cool utilities and other assorted bits 'n' bobs.`
             ]);
             return;
         }
@@ -178,8 +177,9 @@ client.on('ready', ()=>{
                 .run(client, message, args, sudo, conn);
         } catch (err) {
             Shell.respond([
-                `Hmm... I can't seem to find this "${command}" module you speak of OR I've thrown an error. Have you, by any chance, mistyped?`,
+                `Hmm... Sorry,${message.author.username}, I can't seem to find this "${command}" module you speak of OR I've thrown an error. Have you, by any chance, mistyped?`,
                 `Uhh, ${message.author.username}... This "${command}" module doesn't seem to exist OR I've just thrown an error. Check out the log below.`,
+                `Ohnoes, ${message.author.username}! Either I can't find "${command}" or I've just done a goof! I don't know what happened, though, so check out this log that I'm throwing in your face! :D`
             ]);
             Shell.log(`\`\`\`[${err}]\`\`\``, 1);
         }

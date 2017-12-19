@@ -19,14 +19,14 @@ exports.run = (client, message, args, sudo) => {
     }
     else if(!args[0]){
         Shell.respond([
-            `${message.author.username}, this command takes arguments, and you didn't give any.`,
+            `${message.author.username}, this module takes arguments, and you didn't give any.`,
             `Uhh... ${message.author.username}, what do you... want to do with my config file?`
         ]);
+        Shell.log(`\`\`\`[Usage: config <js Object properties/methods>]\`\`\``,1);
         return;
     }
     switch(args[0]){
         case 'entries':
             Shell.log(`\`\`\`${Object.entries(config)}\`\`\``,1);
-            //somme comments to do a thing
     }
 }

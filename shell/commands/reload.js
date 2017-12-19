@@ -9,9 +9,10 @@ exports.run = (client, message, args, sudo) => {
     }
     if(!args[0]){
         Shell.respond([
-            `${message.author.username}, this command takes arguments, and you didn't give any.`,
+            `${message.author.username}, this module takes arguments, and you didn't give any.`,
             `Uhh... ${message.author.username}, what do I... do?`
         ]);
+        Shell.log(`\`\`\`[Usage: reload <module to reload>]\`\`\``,1);
         return;
     } else {
         let selector = args[0].toLowerCase();

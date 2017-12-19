@@ -4,9 +4,10 @@ const
 exports.run = (client, message, args, sudo, conn) => {
     if(!args[0]){
         Shell.respond([
-            `${message.author.username}, this command takes arguments, and you didn't give any.`,
+            `${message.author.username}, this module takes commands and arguments, and you didn't give any.`,
             `Uhh... ${message.author.username}, what do I... do?`
         ]);
+        Shell.log(`\`\`\`[Usage: audio <command> [arguments]]\`\`\``,1);
         return;
     }
     if(args[0]=='play'){
@@ -14,8 +15,9 @@ exports.run = (client, message, args, sudo, conn) => {
         if(!args[1]){
             Shell.respond([
                 `${message.author.username}, there's no URL or directory to play!`,
-                `Hey ${message.author.username}, What do you want me to play? Try tryping the whole command again.`
+                `Hey ${message.author.username}, What do you want me to play?`
             ]);
+            Shell.log(`\`\`\`Usage: audio play <YouTube URL>\`\`\``,1);
             return;
         }
         try {
