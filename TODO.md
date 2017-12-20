@@ -1,4 +1,4 @@
-- FOR JUSTIN: create a multi-user system filtering direct messages, messages from the server, and messages from the superuser (console).
+- FOR KLARI: create a multi-user system filtering direct messages, messages from the server, and messages from the superuser (console).
 
 - Also start mounting EVERY node module, no idea when it might come in handy.
 
