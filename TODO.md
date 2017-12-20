@@ -8,6 +8,7 @@
 - for making more klari sounds, go to IBM's tts machine and remember that pitch="150Hz"
 
 - PLEASE ADD A BASIC ROLEPLAY MANAGER SOON (Turn scheduling, initiative, actions, environment)
+
 RPG.js plans:
 - allows you to make and edit and store (multiple) character(s) on a user account
 - provides extra utilities from the comforts of tabletop roleplay (calculator, dice roller, automator, etc)
